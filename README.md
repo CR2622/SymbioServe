@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SymbioServe OS — BioFlow Multi-Interface Engine
 
-## Getting Started
+Autonomous Bio-Cybernetic Kitchen Operating System with Event-Driven Supabase Realtime Architecture and 3 Role-Based Access Control (RBAC) Interfaces.
 
-First, run the development server:
+---
 
+## 🌟 RBAC Interfaces & Architecture Overview
+
+SymbioServe pivots dark kitchen operations through decentralized bio-inspired agents and a relational database schema mapping:
+
+| Interface | URL Route | Target Persona | Key Agent Integrations |
+| :--- | :--- | :--- | :--- |
+| **Master Engine Hub** | `/` | Executive / Engineering | Unified ANT order queue, SLIME continuous pricing, BEE supplier quotes, FIREFLY oscillator mesh |
+| **Customer Menu** | `/menu` | Diners & Mobile Orderers | **T-CELL** relational allergy filter, **BACTERIA** labor throttling, kitchen load forecast curve |
+| **Chef Display KDS** | `/chef` | Line & Station Cooks | High-contrast tickets, **amber allergen highlight badges**, station velocity & sync phase chart |
+| **Ops & Logistics** | `/ops` | General Managers & Supply Chain | Ingested orders metrics, SLIME margin saved, **low stock alerts table**, real-time labor toggle |
+
+---
+
+## 🧬 Biological Agent Roles
+
+- **ENZYME (Recipe Synthesis Mapping Layer)**:
+  Relational junction table `recipe_ingredients` mapping customer menu items to raw inventory batch lots with quantity and allergen classifications.
+- **T-CELL (Kitchen Immune & Allergen Defense)**:
+  Cross-references customer allergy selections across the relational schema to autonomously filter out hazardous dishes in real-time.
+- **BACTERIA (Labor Throttling & Colony Telemetry)**:
+  Monitors kitchen capacity from `kitchen_status`. When capacity transitions to `'Overwhelmed'`, autonomously hides dishes with `labor_intensity_score > 7.0` to preserve pass velocity.
+- **SLIME (Continuous Decay Dynamic Pricing)**:
+  PostgreSQL-native continuous decay algorithm adjusting menu pricing proportionally to ingredient shelf-life remaining and current stock pressure.
+- **ANT (Autonomous Webhook Ingestion)**:
+  Zero-liability ingestion of delivery webhooks (Zomato, Swiggy, UberEats, DoorDash) with Dead-Letter-Queue (DLQ) routing for uncertain payloads.
+- **FIREFLY (Coupled-Oscillator Station Mesh)**:
+  Kuramoto phase-synchronization aligning cooking cycles across Grill, Fryer, Assembly, and Pass stations.
+
+---
+
+## 🗄️ Database Schema & Migrations
+
+All migrations reside in `supabase/migrations/`:
+- `supabase/migrations/00_master_setup.sql`: Core inventory, menu items, orders, DLQ tables & SLIME pricing function.
+- `supabase/migrations/20261010_firefly_and_agents_mesh.sql`: Station telemetry and purchase order foraging tables.
+- `supabase/migrations/20261010_enzyme_rbac_schema.sql`: **ENZYME RBAC migration**:
+  - `recipe_ingredients`: Junction table linking `menu_items(id)` to `inventory(id)` with `quantity_required` and `allergen_flag`.
+  - `kitchen_status`: Tracks `current_labor_capacity` ('Normal' vs 'Overwhelmed').
+  - `menu_items`: Enhanced with `labor_intensity_score` and `allergens TEXT[]`.
+  - Supabase Realtime publication enabled on all tables.
+
+### Seeding Data
+Seed or sync data via the UI button in `/ops` or via POST endpoint:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+curl -X POST http://localhost:3000/api/admin/seed-enzyme
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Environment Variables
+Ensure `.env.local` is configured (never commit this file):
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://<your-project>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-jwt-key>
+GEMINI_API_KEY=<your-google-genai-key>
+WEBHOOK_SECRET=symbiosis-ant-2026
+```
 
-## Learn More
+### 2. Install & Run Dev Server
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Navigate between interfaces using the universal cross-navigation dock:
+- Customer Menu: [http://localhost:3000/menu](http://localhost:3000/menu)
+- Chef KDS: [http://localhost:3000/chef](http://localhost:3000/chef)
+- Ops & Logistics: [http://localhost:3000/ops](http://localhost:3000/ops)
+- Engine KDS: [http://localhost:3000/](http://localhost:3000/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔒 Security & Credentials
+- All sensitive API keys and connection strings remain strictly stored in untracked environment files (`.env.local`).
+- Row Level Security (RLS) is configured for anon read/write in demonstration mode.

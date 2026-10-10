@@ -23,6 +23,8 @@
 # misc
 .DS_Store
 *.pem
+*.mp4
+"ui sample one.mp4"
 
 # debug
 npm-debug.log*
